@@ -1,0 +1,20 @@
+name: ${artifactId}
+version: ${version}
+author: ${author}
+description: ${description}
+website: ${url}
+main: ${mainClass}
+
+commands:
+  stationaryentity:
+    description: "${description}"
+    usage: |
+      §6[StationaryEntity]§f All commands start with §7/ste §f|§7 /stationaryentity
+      spawn <entity type> [name] §7- Spawn an entity which has the same position and rotation as you. Example: /ste spawn villager &6Lorem &cIpsum
+      §7"entity type" - The type of the entity, for example "villager" (same as in the vanilla spawn command). "name" - The optional name of the entity. This field supports spaces and color codes.
+      §7You can also specify NBT tags, except "rotation" and "NoAI" (you also override the default NBT tags ("Silent" and "Invulnerable") by doing this): /ste spawn villager;Silent:1,Profession:2 &6Lorem &cIpsum
+      delete §7- Delete an entity safely (deletes the entity and the invisible armor stand). Usage: Type "/ste delete" then right click on an entity.
+      clear [radius] §7- Clear the surroundings of floating, always visible names. "radius" - The radius in which to remove named armor stands. Default value: 1
+      rename <name> §7- Rename an entity. Usage: Type "/ste rename <name>" then right click on an entity.
+      stop §7- Exit the selecting mode.
+    aliases: [ste]
