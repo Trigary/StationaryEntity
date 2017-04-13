@@ -1,5 +1,6 @@
 package hu.trigary.stationaryentity;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -7,7 +8,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class Commands implements CommandExecutor {
 	Commands (Main main) {
@@ -77,6 +81,15 @@ public class Commands implements CommandExecutor {
 		}
 		
 		Main.executeCommand ("summon " + split[0].toLowerCase () + " " + Main.getLocation (location) + " {NoAI:1," + rotation + "," + NBT + "}");
+		List<Entity> entities = player.getNearbyEntities (0, 0, 0);
+		for (Entity entity : entities) {
+			if (entity.getType () == type) {
+				if (entity instanceof LivingEntity) {
+					((LivingEntity)entity).setRemoveWhenFarAway (false);
+					break;
+				}
+			}
+		}
 		
 		if (args.length > 2) {
 			String name = args[2];
