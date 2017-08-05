@@ -1,5 +1,6 @@
 package hu.trigary.stationaryentity;
 
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -9,48 +10,48 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class Events implements Listener {
-	Events (Main main) {
+	public Events(Main main) {
 		this.main = main;
 	}
 	
 	private final Main main;
 	
-	@SuppressWarnings ("unused")
-	@EventHandler (priority = EventPriority.LOWEST, ignoreCancelled = true)
-	public void onPlayerInteractEntity (PlayerInteractEntityEvent event) {
-		String command = main.selectingPlayers.remove (event.getPlayer ().getUniqueId ());
-		if (command != null) {
-			Entity entity = event.getRightClicked ();
-			if (main.entityTypes.values ().contains (entity.getType ())) {
-				if (command.length () == 0) {
-					entity.remove ();
-					for (Entity found : entity.getNearbyEntities (0, Main.getEntityHeight (entity), 0)) {
-						if (found.getType () == EntityType.ARMOR_STAND && found.isCustomNameVisible ()) {
-							found.remove ();
-							break;
-						}
-					}
-					Commands.sendInfo (event.getPlayer (), "You have successfully deleted an entity.");
-				} else {
-					for (Entity found : entity.getNearbyEntities (0, Main.getEntityHeight (entity), 0)) {
-						if (found.getType () == EntityType.ARMOR_STAND && found.isCustomNameVisible ()) {
-							found.remove ();
-							break;
-						}
-					}
-					Main.spawnNamedArmorStand (entity.getLocation (), Main.getEntityHeight (entity), command);
-					Commands.sendInfo (event.getPlayer (), "You have successfully renamed an entity.");
-				}
-				event.setCancelled (true);
-			} else {
-				Commands.sendError (event.getPlayer (), "That entity type is not supported!");
+	
+	
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	private void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+		String command = main.takePlayerSelection(event.getPlayer());
+		if (command == null) {
+			return;
+		}
+		
+		Entity entity = event.getRightClicked();
+		for (Entity found : entity.getNearbyEntities(0, entity.getHeight(), 0)) {
+			if (found.getType() == EntityType.ARMOR_STAND && found.isCustomNameVisible()) {
+				found.remove();
+				break;
 			}
 		}
+		
+		if (command.isEmpty()) {
+			entity.remove();
+			Utils.sendInfo(event.getPlayer(), "You have successfully deleted an entity.");
+		} else {
+			ArmorStand armorStand = (ArmorStand)entity.getWorld().spawnEntity(entity.getLocation().add(0, entity.getHeight(), 0), EntityType.ARMOR_STAND);
+			armorStand.setInvulnerable(true);
+			armorStand.setVisible(false);
+			armorStand.setMarker(true);
+			armorStand.setGravity(false);
+			armorStand.setCustomNameVisible(true);
+			armorStand.setCustomName(command);
+			Utils.sendInfo(event.getPlayer(), "You have successfully named an entity.");
+		}
+		
+		event.setCancelled(true);
 	}
 	
-	@SuppressWarnings ("unused")
 	@EventHandler
-	public void onPlayerQuit (PlayerQuitEvent event) {
-		main.selectingPlayers.remove (event.getPlayer ().getUniqueId ());
+	private void onPlayerQuit(PlayerQuitEvent event) {
+		main.takePlayerSelection(event.getPlayer());
 	}
 }
