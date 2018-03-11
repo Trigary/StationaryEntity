@@ -10,11 +10,11 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class Events implements Listener {
+	private final Main main;
+	
 	public Events(Main main) {
 		this.main = main;
 	}
-	
-	private final Main main;
 	
 	
 	
@@ -24,6 +24,7 @@ public class Events implements Listener {
 		if (command == null) {
 			return;
 		}
+		event.setCancelled(true);
 		
 		Entity entity = event.getRightClicked();
 		for (Entity found : entity.getNearbyEntities(0, entity.getHeight(), 0)) {
@@ -36,18 +37,17 @@ public class Events implements Listener {
 		if (command.isEmpty()) {
 			entity.remove();
 			Utils.sendInfo(event.getPlayer(), "You have successfully deleted an entity.");
-		} else {
-			ArmorStand armorStand = (ArmorStand)entity.getWorld().spawnEntity(entity.getLocation().add(0, entity.getHeight(), 0), EntityType.ARMOR_STAND);
-			armorStand.setInvulnerable(true);
-			armorStand.setVisible(false);
-			armorStand.setMarker(true);
-			armorStand.setGravity(false);
-			armorStand.setCustomNameVisible(true);
-			armorStand.setCustomName(command);
-			Utils.sendInfo(event.getPlayer(), "You have successfully named an entity.");
+			return;
 		}
 		
-		event.setCancelled(true);
+		ArmorStand armorStand = (ArmorStand) entity.getWorld().spawnEntity(entity.getLocation().add(0, entity.getHeight(), 0), EntityType.ARMOR_STAND);
+		armorStand.setInvulnerable(true);
+		armorStand.setVisible(false);
+		armorStand.setMarker(true);
+		armorStand.setGravity(false);
+		armorStand.setCustomNameVisible(true);
+		armorStand.setCustomName(command);
+		Utils.sendInfo(event.getPlayer(), "You have successfully named an entity.");
 	}
 	
 	@EventHandler

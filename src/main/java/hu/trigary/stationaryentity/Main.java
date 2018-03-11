@@ -8,14 +8,13 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Main extends JavaPlugin {
+	private final Map<UUID, String> selectingPlayers = new HashMap<>();
+	
 	@Override
 	public void onEnable() {
-		selectingPlayers = new HashMap<>();
 		getCommand("stationaryentity").setExecutor(new Commands(this));
 		getServer().getPluginManager().registerEvents(new Events(this), this);
 	}
-	
-	private Map<UUID, String> selectingPlayers;
 	
 	
 	

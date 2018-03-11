@@ -11,11 +11,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
+	private final Main main;
+	
 	public Commands(Main main) {
 		this.main = main;
 	}
-	
-	private final Main main;
 	
 	
 	
@@ -35,7 +35,7 @@ public class Commands implements CommandExecutor {
 			return true;
 		}
 		
-		Player player = (Player)sender;
+		Player player = (Player) sender;
 		switch (args[0].toLowerCase()) {
 			case "spawn":
 				if (args.length > 1) {
@@ -58,9 +58,9 @@ public class Commands implements CommandExecutor {
 			case "stop":
 				commandStop(player);
 				return true;
+			default:
+				return false;
 		}
-		
-		return false;
 	}
 	
 	

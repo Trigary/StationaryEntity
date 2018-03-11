@@ -7,22 +7,17 @@ public class Utils {
 	private static final String PREFIX = ChatColor.GRAY + "[" + ChatColor.GOLD + "StationaryEntity" + ChatColor.GRAY + "] ";
 	
 	public static String argsToString(String[] args, int start) {
-		StringBuilder stringBuilder = new StringBuilder();
+		StringBuilder builder = new StringBuilder();
 		for (int i = start; i < args.length; ) {
-			stringBuilder.append(args[i]);
-			i++;
-			
+			builder.append(args[i++]);
 			if (i < args.length) {
-				stringBuilder.append(' ');
+				builder.append(' ');
 			} else {
 				break;
 			}
 		}
-		
-		return stringBuilder.toString();
+		return builder.toString();
 	}
-	
-	
 	
 	public static void sendInfo(CommandSender recipient, String message) {
 		recipient.sendMessage(PREFIX + ChatColor.WHITE + message);
